@@ -20,7 +20,7 @@
 
         // 게임 설정
         const GRAVITY = 0.8;
-        const JUMP_STRENGTH = -16;
+        const JUMP_STRENGTH = -12;
         let gameSpeed = 7;
         let score = 0;
         let gameOver = false;
@@ -34,6 +34,7 @@
         cactusImg.src = "chocobi.png"; // 같은 폴더에 있어야 함
 
         // 공룡 객체
+       // 공룡 객체 (2단 점프 버전)
         const dino = {
             x: 50,
             y: 300,
@@ -41,8 +42,10 @@
             height: 50,
             dy: 0,
             isJumping: false,
+            jumpCount: 0,  // 점프 횟수 세기
+            maxJumps: 3,   // 최대 점프 횟수 (3으로 바꾸면 3단 점프!)
+
             draw() {
-                // 이미지가 로드되지 않았을 경우를 대비해 색상 박스 먼저 그림
                 if (dinoImg.complete && dinoImg.naturalHeight !== 0) {
                     ctx.drawImage(dinoImg, this.x, this.y, this.width, this.height);
                 } else {
@@ -59,12 +62,15 @@
                     this.y = 350 - this.height;
                     this.isJumping = false;
                     this.dy = 0;
+                    this.jumpCount = 0; // 바닥에 닿으면 점프 횟수 초기화
                 }
             },
             jump() {
-                if (!this.isJumping) {
+                // 최대 점프 횟수보다 적게 점프했다면 실행
+                if (this.jumpCount < this.maxJumps) {
                     this.dy = JUMP_STRENGTH;
                     this.isJumping = true;
+                    this.jumpCount++; // 점프 횟수 1 증가
                 }
             }
         };
